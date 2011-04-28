@@ -1,0 +1,31 @@
+diff -Naur wso2-wsf-cpp-src-2.1.0.patched/wsf_c/axis2c/util/configure wso2-wsf-cpp-src-2.1.0.nominizip/wsf_c/axis2c/util/configure
+--- wso2-wsf-cpp-src-2.1.0.patched/wsf_c/axis2c/util/configure	2009-10-13 14:23:00.000000000 -0500
++++ wso2-wsf-cpp-src-2.1.0.nominizip/wsf_c/axis2c/util/configure	2011-04-13 13:05:56.000000000 -0500
+@@ -21669,7 +21669,7 @@
+ 
+ 
+ 
+-ac_config_files="$ac_config_files Makefile src/Makefile src/platforms/unix/Makefile src/minizip/Makefile src/stomp/Makefile include/Makefile test/Makefile test/util/Makefile test/allocator/Makefile test/date_time/Makefile test/duration/Makefile test/link_list/Makefile test/properties/Makefile test/rand/Makefile test/stack/Makefile test/string_util/Makefile test/uri/Makefile test/url/Makefile test/utils/Makefile"
++ac_config_files="$ac_config_files Makefile src/Makefile src/platforms/unix/Makefile src/stomp/Makefile include/Makefile test/Makefile test/util/Makefile test/allocator/Makefile test/date_time/Makefile test/duration/Makefile test/link_list/Makefile test/properties/Makefile test/rand/Makefile test/stack/Makefile test/string_util/Makefile test/uri/Makefile test/url/Makefile test/utils/Makefile"
+ 
+ 
+ cat >confcache <<\_ACEOF
+@@ -22331,7 +22331,6 @@
+     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
+     "src/platforms/unix/Makefile") CONFIG_FILES="$CONFIG_FILES src/platforms/unix/Makefile" ;;
+-    "src/minizip/Makefile") CONFIG_FILES="$CONFIG_FILES src/minizip/Makefile" ;;
+     "src/stomp/Makefile") CONFIG_FILES="$CONFIG_FILES src/stomp/Makefile" ;;
+     "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
+     "test/Makefile") CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
+diff -Naur wso2-wsf-cpp-src-2.1.0.patched/wsf_c/axis2c/util/configure.ac wso2-wsf-cpp-src-2.1.0.nominizip/wsf_c/axis2c/util/configure.ac
+--- wso2-wsf-cpp-src-2.1.0.patched/wsf_c/axis2c/util/configure.ac	2009-10-13 14:20:19.000000000 -0500
++++ wso2-wsf-cpp-src-2.1.0.nominizip/wsf_c/axis2c/util/configure.ac	2011-04-13 13:05:00.000000000 -0500
+@@ -232,7 +232,6 @@
+ AC_CONFIG_FILES([Makefile \
+     src/Makefile \
+     src/platforms/unix/Makefile \
+-    src/minizip/Makefile \
+     src/stomp/Makefile \
+     include/Makefile \
+     test/Makefile \

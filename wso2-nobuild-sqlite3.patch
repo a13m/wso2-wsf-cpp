@@ -1,0 +1,101 @@
+diff -Naur wso2-wsf-cpp-src-2.1.0.patched/wsf_c/sandesha2c/src/storage/sqlite/Makefile.am wso2-wsf-cpp-src-2.1.0.nosqlite/wsf_c/sandesha2c/src/storage/sqlite/Makefile.am
+--- wso2-wsf-cpp-src-2.1.0.patched/wsf_c/sandesha2c/src/storage/sqlite/Makefile.am	2009-10-13 14:03:57.000000000 -0500
++++ wso2-wsf-cpp-src-2.1.0.nosqlite/wsf_c/sandesha2c/src/storage/sqlite/Makefile.am	2011-04-13 13:26:31.000000000 -0500
+@@ -8,8 +8,7 @@
+ 								permanent_seq_property_mgr.c \
+ 								permanent_storage_mgr.c \
+ 								permanent_bean_mgr.c \
+-								msg_store_bean.c \
+-								sqlite3.c
++								msg_store_bean.c
+ 
+ INCLUDES = -I$(top_builddir)/include \
+ 			-I$(top_builddir)/include/sandesha2 \
+@@ -20,6 +19,5 @@
+ 		   	@UTILINC@
+ 
+ EXTRA_DIST=sandesha2_permanent_bean_mgr.h \
+-		sandesha2_sqls.h \
+-		sqlite3.h
++		sandesha2_sqls.h
+ 
+diff -Naur wso2-wsf-cpp-src-2.1.0.patched/wsf_c/sandesha2c/src/storage/sqlite/Makefile.in wso2-wsf-cpp-src-2.1.0.nosqlite/wsf_c/sandesha2c/src/storage/sqlite/Makefile.in
+--- wso2-wsf-cpp-src-2.1.0.patched/wsf_c/sandesha2c/src/storage/sqlite/Makefile.in	2009-10-13 14:35:44.000000000 -0500
++++ wso2-wsf-cpp-src-2.1.0.nosqlite/wsf_c/sandesha2c/src/storage/sqlite/Makefile.in	2011-04-13 13:26:45.000000000 -0500
+@@ -48,7 +48,7 @@
+ 	permanent_invoker_mgr.lo permanent_sender_mgr.lo \
+ 	permanent_next_msg_mgr.lo permanent_seq_property_mgr.lo \
+ 	permanent_storage_mgr.lo permanent_bean_mgr.lo \
+-	msg_store_bean.lo sqlite3.lo
++	msg_store_bean.lo
+ libsandesha2_permanent_la_OBJECTS =  \
+ 	$(am_libsandesha2_permanent_la_OBJECTS)
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+@@ -195,8 +195,7 @@
+ 								permanent_seq_property_mgr.c \
+ 								permanent_storage_mgr.c \
+ 								permanent_bean_mgr.c \
+-								msg_store_bean.c \
+-								sqlite3.c
++								msg_store_bean.c
+ 
+ INCLUDES = -I$(top_builddir)/include \
+ 			-I$(top_builddir)/include/sandesha2 \
+@@ -207,8 +206,7 @@
+ 		   	@UTILINC@
+ 
+ EXTRA_DIST = sandesha2_permanent_bean_mgr.h \
+-		sandesha2_sqls.h \
+-		sqlite3.h
++		sandesha2_sqls.h
+ 
+ all: all-am
+ 
+@@ -269,7 +267,6 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/permanent_sender_mgr.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/permanent_seq_property_mgr.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/permanent_storage_mgr.Plo@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sqlite3.Plo@am__quote@
+ 
+ .c.o:
+ @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+diff -Naur wso2-wsf-cpp-src-2.1.0.patched/wsf_c/savanc/src/subs_mgrs/sqlite/Makefile.am wso2-wsf-cpp-src-2.1.0.nosqlite/wsf_c/savanc/src/subs_mgrs/sqlite/Makefile.am
+--- wso2-wsf-cpp-src-2.1.0.patched/wsf_c/savanc/src/subs_mgrs/sqlite/Makefile.am	2009-10-13 14:04:25.000000000 -0500
++++ wso2-wsf-cpp-src-2.1.0.nosqlite/wsf_c/savanc/src/subs_mgrs/sqlite/Makefile.am	2011-04-13 13:28:36.000000000 -0500
+@@ -1,6 +1,6 @@
+ lib_LTLIBRARIES = libsavan_subs_mgr.la
+ 
+-libsavan_subs_mgr_la_SOURCES = subs_mgr.c sqlite3.c
++libsavan_subs_mgr_la_SOURCES = subs_mgr.c
+ 
+ libsavan_subs_mgr_la_LIBADD = ../common/libsavan_common_subs_mgr.la
+ 
+diff -Naur wso2-wsf-cpp-src-2.1.0.patched/wsf_c/savanc/src/subs_mgrs/sqlite/Makefile.in wso2-wsf-cpp-src-2.1.0.nosqlite/wsf_c/savanc/src/subs_mgrs/sqlite/Makefile.in
+--- wso2-wsf-cpp-src-2.1.0.patched/wsf_c/savanc/src/subs_mgrs/sqlite/Makefile.in	2009-10-13 14:35:15.000000000 -0500
++++ wso2-wsf-cpp-src-2.1.0.nosqlite/wsf_c/savanc/src/subs_mgrs/sqlite/Makefile.in	2011-04-13 13:29:06.000000000 -0500
+@@ -53,7 +53,7 @@
+ LTLIBRARIES = $(lib_LTLIBRARIES)
+ libsavan_subs_mgr_la_DEPENDENCIES =  \
+ 	../common/libsavan_common_subs_mgr.la
+-am_libsavan_subs_mgr_la_OBJECTS = subs_mgr.lo sqlite3.lo
++am_libsavan_subs_mgr_la_OBJECTS = subs_mgr.lo
+ libsavan_subs_mgr_la_OBJECTS = $(am_libsavan_subs_mgr_la_OBJECTS)
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+@@ -206,7 +206,7 @@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ lib_LTLIBRARIES = libsavan_subs_mgr.la
+-libsavan_subs_mgr_la_SOURCES = subs_mgr.c sqlite3.c
++libsavan_subs_mgr_la_SOURCES = subs_mgr.c
+ libsavan_subs_mgr_la_LIBADD = ../common/libsavan_common_subs_mgr.la
+ INCLUDES = -I$(top_builddir)/include \
+ 			-I$(top_builddir)/include/savan \
+@@ -286,7 +286,6 @@
+ distclean-compile:
+ 	-rm -f *.tab.c
+ 
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sqlite3.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/subs_mgr.Plo@am__quote@
+ 
+ .c.o:
