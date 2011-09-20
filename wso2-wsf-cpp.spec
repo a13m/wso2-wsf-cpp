@@ -4,6 +4,7 @@
 
 %if 0%{?fedora} > 0
 # Build/package everything on fedora
+%global package_rampart 1
 %global build_savan 1
 %global build_sandesha2 1
 %global build_wsclient 1
@@ -11,6 +12,7 @@
 %global package_axis_http_server 1
 %global package_axis2_modules 1
 %else
+%global package_rampart 0
 %global build_savan 0
 %global build_sandesha2 0
 %global build_wsclient 0
@@ -22,7 +24,7 @@
 Name: %{pkg_name}
 Summary: WSO2 Web Services Framework for C++
 Version: %{pkg_ver}
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Tools
 License: ASL 2.0
 URL: http://wso2.org/library/wsf/cpp
@@ -41,8 +43,12 @@ Patch0: wso2-build-fixes.patch
 # Allow definition of library path for services
 # https://issues.apache.org/jira/browse/AXIS2C-1544
 Patch1: msg_rcvr_lib.patch
-# Still investigating the issue, but this helps with library loading issues
+# Allow shared libs to be loaded using literal filenames as well as original inferred style
+# https://issues.apache.org/jira/browse/AXIS2C-1549
 Patch2: literal_lib_name.patch
+# Make stream support more complete for SSL
+# https://issues.apache.org/jira/browse/AXIS2C-1556
+Patch3: generic_streams_for_ssl.patch
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires: openssl-devel
 BuildRequires: httpd-devel
@@ -51,7 +57,6 @@ BuildRequires: libxml2-devel
 BuildRequires: sqlite-devel
 BuildRequires: dos2unix
 Requires: %{axis_name} = %{version}-%{release}
-Requires: wso2-rampart = %{version}-%{release}
 
 %description
 WSO2 Web Services Framework for C++. WSO2 WSF/C++ is a standards compliant,
@@ -59,7 +64,7 @@ enterprise grade, open source, C++ library for providing and consuming Web
 services in C++. WSO2 WSF/C++ is a complete solution for building and
 deploying Web services, and is the C++ library with a wide range of
 WS-* specification implementations, including MTOM, WS-Addressing, WS-Policy,
-WS-Security, WS-SecurityPolicy, WS-Reliable Messaging and WS-eventing
+WS-Security, WS-SecurityPolicy, WS-Reliable Messaging and WS-Events
 
 %post
 /sbin/ldconfig
@@ -72,7 +77,6 @@ WS-Security, WS-SecurityPolicy, WS-Reliable Messaging and WS-eventing
 %doc README NEWS LICENSE NOTICE INSTALL README.INSTALL.LINUX README.SAMPLES
 %_libdir/libwsf_cpp_msg_recv.so.*
 %_libdir/libwso2_wsf.so.*
-%_libdir/libwso2_wsf_security.so.*
 %_libdir/libneethi.so.*
 %_libdir/libneethi_util.so.*
 
@@ -87,7 +91,7 @@ enterprise grade, open source, C++ library for providing and consuming Web
 services in C++. WSO2 WSF/C++ is a complete solution for building and
 deploying Web services, and is the C++ library with a wide range of
 WS-* specification implementations, including MTOM, WS-Addressing, WS-Policy,
-WS-Security, WS-SecurityPolicy, WS-Reliable Messaging and WS-eventing.
+WS-Security, WS-SecurityPolicy, WS-Reliable Messaging and WS-Events.
 
 This package contains header files and documentation for developing with
 the WSO2 Web Services Framework for C++
@@ -98,9 +102,44 @@ the WSO2 Web Services Framework for C++
 %_includedir/%{pkg_name}/*.h
 %_libdir/libwsf_cpp_msg_recv.so
 %_libdir/libwso2_wsf.so
-%_libdir/libwso2_wsf_security.so
 %_libdir/libneethi.so
 %_libdir/libneethi_util.so
+
+%if %{package_rampart}
+%package -n %{pkg_name}-security
+Summary: WSO2 Security for Web Services Framework for C++
+Group: Development/Tools
+Requires: wso2-rampart = %{version}-%{release}
+
+%description -n %{pkg_name}-security
+A security library for WSO2
+
+%post -n %{pkg_name}-security
+/sbin/ldconfig
+
+%postun -n %{pkg_name}-security
+/sbin/ldconfig
+
+%files -n %{pkg_name}-security
+%defattr(-,root,root)
+%doc LICENSE
+%_libdir/libwso2_wsf_security.so.*
+
+%package -n %{pkg_name}-security-devel
+Summary: WSO2 Security for Web Services Framework for C++
+Group: Development/Tools
+Requires: %{pkg_name}-security = %{version}-%{release}
+Requires: %{pkg_name}-devel = %{version}-%{release}
+Requires: wso2-rampart-devel = %{version}-%{release}
+
+%description -n %{pkg_name}-security-devel
+A security library for WSO2 development
+
+%files -n %{pkg_name}-security-devel
+%defattr(-,root,root)
+%doc LICENSE
+%_libdir/libwso2_wsf_security.so
+%endif
 
 %if %{build_wsclient}
 %package -n wso2-wsclient
@@ -239,6 +278,7 @@ WSO2's version of Apache Axis2/C
 %_libdir/libguththila.so
 %_libdir/pkgconfig/axis2c.pc
 
+%if %{package_rampart}
 %package -n wso2-rampart
 Summary: A security module for Apache Axis2/C
 Group: Development/Tools
@@ -290,6 +330,7 @@ WSO2's version of Apache Rampart/C
 %doc wsf_c/docs/rampartc
 %_includedir/rampart-1.3.0/*.h
 %_libdir/librampart.so
+%endif
 
 %if %{build_savan}
 %package -n wso2-savan
@@ -409,7 +450,9 @@ dos2unix NEWS
 
 # Fix spurrious executable perms on doc files
 chmod a-x wsf_c/docs/axis2c/*.cgi
+%if %{package_rampart}
 chmod a-x wsf_c/docs/rampartc/*.cgi
+%endif
 %if %{build_sandesha2}
 chmod a-x wsf_c/docs/sandesha2c/*.cgi
 %endif
@@ -426,6 +469,7 @@ chmod a-x wsf_c/wsclient/LICENSE
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %if %{build_sandesha2}
@@ -447,7 +491,7 @@ wsclient="--disable-wsclient"
 %endif
 
 export CFLAGS="-O2"
-./configure --enable-multi-thread=no --with-axis2=`pwd`/wsf_c/axis2c/include --with-apache2=%{_includedir}/httpd --with-apr=%{_includedir}/apr-1 --with-sqlite=%{_includedir} --without-archive --enable-openssl --enable-libxml2 --disable-static --disable-rpath --bindir=%{_bindir} --sysconfdir=%{_sysconfdir} --libdir=%{_libdir} --includedir=%{_includedir} --datarootdir=%{_datadir}/%{pkg_name}-%{pkg_ver} --docdir=%{_datadir}/doc/%{pkg_name}-%{pkg_ver} --prefix=%{_prefix} $sandesha2 $savan $wsclient
+./configure --enable-multi-thread=no --with-axis2=`pwd`/wsf_c/axis2c/include --with-apache2=%{_includedir}/httpd --with-apr=%{_includedir}/apr-1 --with-sqlite=%{_includedir} --without-archive --enable-openssl --enable-libxml2 --disable-static --disable-rpath --bindir=%{_bindir} --sysconfdir=%{_sysconfdir} --libdir=%{_libdir} --includedir=%{_includedir} --datarootdir=%{_datadir}/%{pkg_name}-%{pkg_ver} --docdir=%{_datadir}/doc/%{pkg_name}-%{pkg_ver} --prefix=%{_prefix} $sandesha2 $savan $wsclient $rampart
 
 # Remove rpath
 find . -name libtool | xargs sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g'
@@ -548,6 +592,7 @@ popd
 rm -f %{buildroot}/%{_libdir}/%{axis_name}/modules/sandesha2/*
 %endif
 
+%if %{package_rampart}
 pushd %{buildroot}/%{_libdir}/%{axis_name}/modules/rampart
 rm -f libmod_rampart.la *.so *.so.0
 mv -f libmod_rampart.so.0.3.0 libmod_rampart.so
@@ -556,13 +601,23 @@ pushd %{buildroot}/%{_libdir}/%{axis_name}/modules/rahas
 rm -f libmod_rahas.la *.so *.so.0
 mv -f libmod_rahas.so.0.3.0 libmod_rahas.so
 popd
-
+%else
+rm -f %{buildroot}/%{_libdir}/%{axis_name}/modules/rampart/*
+rm -f %{buildroot}/%{_libdir}/%{axis_name}/modules/rahas/*
+rm -fr %{buildroot}/%{_includedir}/rampart-1.3.0
+rm -fr %{buildroot}/%{_libdir}/librampart.*
+rm -fr %{buildroot}/%{_libdir}/libwso2_wsf_security.*
+%endif
 mv -f %{buildroot}/%{_includedir}/*.h %{buildroot}/%{_includedir}/%{pkg_name}
 
 %clean
 rm -rf %{buildroot}
 
 %changelog
+* Tue Aug 16 2011  Robert Rati <rrati@redhat> - 2.1.0-4
+- Added generic stream patch
+- Created security package to separate rampart dependency
+
 * Wed Apr 27 2011  Robert Rati <rrati@redhat> - 2.1.0-3
 - Moved libmod* files to subdirs in %_libdir for appropriate loading into axis2
 - Included default module.xml configs for axis2 modules, removed from doc
