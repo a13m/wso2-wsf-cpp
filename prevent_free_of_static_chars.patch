@@ -1,0 +1,46 @@
+From 35055f4b07f06621f43a704285cb90b5d80dff9f Mon Sep 17 00:00:00 2001
+From: Peter MacKinnon <pmackinn@redhat.com>
+Date: Fri, 16 Sep 2011 11:12:38 -0400
+Subject: [PATCH] Fix to prevent free of static chars in fault_value_str
+
+---
+ src/msg_recv/wsf_cpp_msg_recv.cpp |    9 +++++++--
+ 1 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/src/msg_recv/wsf_cpp_msg_recv.cpp b/src/msg_recv/wsf_cpp_msg_recv.cpp
+index bd0575b..abfcd60 100644
+--- a/src/msg_recv/wsf_cpp_msg_recv.cpp
++++ b/src/msg_recv/wsf_cpp_msg_recv.cpp
+@@ -417,7 +417,7 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
+ 
+ 	if (status != AXIS2_SUCCESS || is_fault)
+ 	{
+-		const axis2_char_t *fault_value_str = axutil_stracat(Environment::getEnv(),soapEnvelopePrefix, ":Sender");
++		const axis2_char_t *fault_value_str = NULL;
+ 		const axis2_char_t *fault_reason_str = NULL;
+ 		const axis2_char_t *err_msg = NULL;
+ 
+@@ -436,6 +436,9 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
+ 					AXIOM_SOAP12_SOAP_FAULT_VALUE_RECEIVER;
+ 			}
+ 		}
++		else {
++			fault_value_str = axutil_stracat(Environment::getEnv(),soapEnvelopePrefix, ":Sender");
++		}
+ 
+ 		err_msg = AXIS2_ERROR_GET_MESSAGE(env->error);
+ 		if (err_msg)
+@@ -450,7 +453,9 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
+ 		soap_fault = axiom_soap_fault_create_default_fault(env, out_body, fault_value_str, 
+ 			fault_reason_str, soap_version);
+ 
+-		AXIS2_FREE((Environment::getEnv()->allocator), (void*)fault_value_str);
++		if (skel_invoked) {
++		    AXIS2_FREE((Environment::getEnv()->allocator), (void*)fault_value_str);
++		}
+ 
+ 		if (fault_node)
+ 		{
+-- 
+1.7.4.4
+

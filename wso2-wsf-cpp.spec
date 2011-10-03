@@ -24,7 +24,7 @@
 Name: %{pkg_name}
 Summary: WSO2 Web Services Framework for C++
 Version: %{pkg_ver}
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Tools
 License: ASL 2.0
 URL: http://wso2.org/library/wsf/cpp
@@ -49,6 +49,9 @@ Patch2: literal_lib_name.patch
 # Make stream support more complete for SSL
 # https://issues.apache.org/jira/browse/AXIS2C-1556
 Patch3: generic_streams_for_ssl.patch
+# Fix free of static buffer
+# https://wso2.org/jira/browse/WSFCPP-138
+Patch4: prevent_free_of_static_chars.patch
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires: openssl-devel
 BuildRequires: httpd-devel
@@ -470,6 +473,7 @@ chmod a-x wsf_c/wsclient/LICENSE
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %if %{build_sandesha2}
@@ -614,6 +618,9 @@ mv -f %{buildroot}/%{_includedir}/*.h %{buildroot}/%{_includedir}/%{pkg_name}
 rm -rf %{buildroot}
 
 %changelog
+* Mon Sep 26 2011  Robert Rati <rrati@redhat> - 2.1.0-5
+- Added patch to fix a free of a static buffer
+
 * Tue Aug 16 2011  Robert Rati <rrati@redhat> - 2.1.0-4
 - Added generic stream patch
 - Created security package to separate rampart dependency
