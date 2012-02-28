@@ -24,7 +24,7 @@
 Name: %{pkg_name}
 Summary: WSO2 Web Services Framework for C++
 Version: %{pkg_ver}
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Tools
 License: ASL 2.0
 URL: http://wso2.org/library/wsf/cpp
@@ -618,6 +618,9 @@ mv -f %{buildroot}/%{_includedir}/*.h %{buildroot}/%{_includedir}/%{pkg_name}
 rm -rf %{buildroot}
 
 %changelog
+* Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-7
+- Rebuilt for c++ ABI breakage
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
