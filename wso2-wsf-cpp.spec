@@ -24,7 +24,7 @@
 Name: %{pkg_name}
 Summary: WSO2 Web Services Framework for C++
 Version: %{pkg_ver}
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group: Development/Tools
 License: ASL 2.0
 URL: http://wso2.org/library/wsf/cpp
@@ -52,6 +52,9 @@ Patch3: generic_streams_for_ssl.patch
 # Fix free of static buffer
 # https://wso2.org/jira/browse/WSFCPP-138
 Patch4: prevent_free_of_static_chars.patch
+# 2.4 client_ip API change
+# https://bugzilla.redhat.com/show_bug.cgi?id=833173
+Patch5: 2.4_client_ip_API_change.patch
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires: openssl-devel
 BuildRequires: httpd-devel
@@ -474,6 +477,7 @@ chmod a-x wsf_c/wsclient/LICENSE
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 %if %{build_sandesha2}
@@ -618,6 +622,9 @@ mv -f %{buildroot}/%{_includedir}/*.h %{buildroot}/%{_includedir}/%{pkg_name}
 rm -rf %{buildroot}
 
 %changelog
+* Wed Jul 11 2012  Pete MacKinnon <pmackinn@redhat> - 2.1.0-8
+- Added patch for 2.4 httpd API change
+
 * Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-7
 - Rebuilt for c++ ABI breakage
 
