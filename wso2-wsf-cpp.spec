@@ -25,7 +25,7 @@
 Name: %{pkg_name}
 Summary: WSO2 Web Services Framework for C++
 Version: %{pkg_ver}
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: Development/Tools
 License: ASL 2.0
 URL: http://wso2.org/library/wsf/cpp
@@ -624,6 +624,9 @@ mv -f %{buildroot}/%{_includedir}/*.h %{buildroot}/%{_includedir}/%{pkg_name}
 rm -rf %{buildroot}
 
 %changelog
+* Thu Jul 12 2012  Peter MacKinnon <pmackinn@redhat.com> - 2.1.0-10
+- Fixed typo in patch file
+
 * Thu Jul 12 2012  Peter MacKinnon <pmackinn@redhat.com> - 2.1.0-9
 - Added missing Requires: httpd-mmn
 
