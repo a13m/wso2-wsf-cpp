@@ -25,7 +25,7 @@
 Name: %{pkg_name}
 Summary: WSO2 Web Services Framework for C++
 Version: %{pkg_ver}
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Tools
 License: ASL 2.0
 URL: http://wso2.org/library/wsf/cpp
@@ -56,6 +56,8 @@ Patch4: prevent_free_of_static_chars.patch
 # 2.4 client_ip API change
 # https://bugzilla.redhat.com/show_bug.cgi?id=833173
 Patch5: 2.4_client_ip_API_change.patch
+# Remove exit(0) calls in Environment.cpp for rpmlint
+Patch6: remove_exit0_calls_for_rpmlint.patch
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires: openssl-devel
 BuildRequires: httpd-devel
@@ -480,6 +482,7 @@ chmod a-x wsf_c/wsclient/LICENSE
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 %build
 %if %{build_sandesha2}
@@ -500,7 +503,8 @@ wsclient="--enable-wsclient"
 wsclient="--disable-wsclient"
 %endif
 
-export CFLAGS="-O2"
+export CFLAGS="-O2 -D_FORTIFY_SOURCE=2"
+export CXXFLAGS=$CFLAGS
 ./configure --enable-multi-thread=no --with-axis2=`pwd`/wsf_c/axis2c/include --with-apache2=%{_includedir}/httpd --with-apr=%{_includedir}/apr-1 --with-sqlite=%{_includedir} --without-archive --enable-openssl --enable-libxml2 --disable-static --disable-rpath --bindir=%{_bindir} --sysconfdir=%{_sysconfdir} --libdir=%{_libdir} --includedir=%{_includedir} --datarootdir=%{_datadir}/%{pkg_name}-%{pkg_ver} --docdir=%{_datadir}/doc/%{pkg_name}-%{pkg_ver} --prefix=%{_prefix} $sandesha2 $savan $wsclient $rampart
 
 # Remove rpath
@@ -624,6 +628,10 @@ mv -f %{buildroot}/%{_includedir}/*.h %{buildroot}/%{_includedir}/%{pkg_name}
 rm -rf %{buildroot}
 
 %changelog
+* Thu Jul 12 2012  Peter MacKinnon <pmackinn@redhat.com> - 2.1.0-11
+- Added FORTIFY_SOURCE flag
+- Added patch to remove exit(0) calls in wsf shared libs
+
 * Thu Jul 12 2012  Peter MacKinnon <pmackinn@redhat.com> - 2.1.0-10
 - Fixed typo in patch file
 
