@@ -1,3 +1,4 @@
+%{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
 %global pkg_name wso2-wsf-cpp
 %global axis_name wso2-axis2
 %global pkg_ver 2.1.0
@@ -24,7 +25,7 @@
 Name: %{pkg_name}
 Summary: WSO2 Web Services Framework for C++
 Version: %{pkg_ver}
-Release: 8%{?dist}
+Release: 9%{?dist}
 Group: Development/Tools
 License: ASL 2.0
 URL: http://wso2.org/library/wsf/cpp
@@ -170,6 +171,7 @@ Summary: An Apache HTTPD module which adds axis2 support
 Group: System Environment/Daemons
 Requires: httpd
 Requires: apr
+Requires: httpd-mmn = %{_httpd_mmn}
 
 %description -n mod_%{axis_name}
 An Apache HTTPD module that adds support for axis2 WebServices.  This package
@@ -622,6 +624,9 @@ mv -f %{buildroot}/%{_includedir}/*.h %{buildroot}/%{_includedir}/%{pkg_name}
 rm -rf %{buildroot}
 
 %changelog
+* Thu Jul 12 2012  Peter MacKinnon <pmackinn@redhat.com> - 2.1.0-9
+- Added missing Requires: httpd-mmn
+
 * Wed Jul 11 2012  Pete MacKinnon <pmackinn@redhat> - 2.1.0-8
 - Added patch for 2.4 httpd API change
 
