@@ -25,7 +25,7 @@
 Name: %{pkg_name}
 Summary: WSO2 Web Services Framework for C++
 Version: %{pkg_ver}
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: Development/Tools
 License: ASL 2.0
 URL: http://wso2.org/library/wsf/cpp
@@ -58,6 +58,23 @@ Patch4: prevent_free_of_static_chars.patch
 Patch5: 2.4_client_ip_API_change.patch
 # Remove exit(0) calls in Environment.cpp for rpmlint
 Patch6: remove_exit0_calls_for_rpmlint.patch
+# https://issues.apache.org/jira/browse/AXIS2C-1522
+Patch7: axis2c-curlinit.patch
+# https://issues.apache.org/jira/browse/AXIS2C-1512
+Patch8: axis2c-envpath.patch
+# Fix linking DSO issues (is this upstream?)
+Patch9: axis2c-dso.patch
+# https://issues.apache.org/jira/browse/AXIS2C-1521
+Patch10: axis2c-sslctx.patch
+# Add missing data source checksum
+# https://issues.apache.org/jira/browse/RAMPARTC-154
+Patch11: rampartc-c14n.patch
+# Fix two memory leaks
+# https://issues.apache.org/jira/browse/RAMPARTC-153
+Patch12: rampartc-memleak.patch
+# Fix bad timestamp checking (sent to upstream security list)
+Patch13: rampartc-timestamp.patch
+
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires: openssl-devel
 BuildRequires: httpd-devel
@@ -483,6 +500,13 @@ chmod a-x wsf_c/wsclient/LICENSE
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
 
 %build
 %if %{build_sandesha2}
@@ -628,6 +652,9 @@ mv -f %{buildroot}/%{_includedir}/*.h %{buildroot}/%{_includedir}/%{pkg_name}
 rm -rf %{buildroot}
 
 %changelog
+* Thu Jul 19 2012 Andy Grimm <agrimm@gmail.com> - 2.1.0-12
+- Integrate axis2/c & rampart/c patches from Eucalyptus and upstream
+
 * Thu Jul 12 2012  Peter MacKinnon <pmackinn@redhat.com> - 2.1.0-11
 - Added FORTIFY_SOURCE flag
 - Added patch to remove exit(0) calls in wsf shared libs

@@ -1,0 +1,21 @@
+diff -ur wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/src/core/transport/http/sender/libcurl/axis2_libcurl.c wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/src/core/transport/http/sender/libcurl/axis2_libcurl.c
+--- wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/src/core/transport/http/sender/libcurl/axis2_libcurl.c	2009-10-13 15:03:21.000000000 -0400
++++ wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/src/core/transport/http/sender/libcurl/axis2_libcurl.c	2012-07-17 16:55:43.514707698 -0400
+@@ -111,7 +111,7 @@
+     axis2_char_t *buffer = NULL;
+     unsigned int buffer_size = 0;
+     int content_length = -1;
+-    axis2_char_t *content_type;
++    axis2_char_t *content_type = NULL;
+     axis2_char_t *content_len = AXIS2_HTTP_HEADER_CONTENT_LENGTH_;
+     const axis2_char_t *char_set_enc = NULL;
+     axis2_char_t *content = AXIS2_HTTP_HEADER_CONTENT_TYPE_;
+@@ -140,7 +140,7 @@
+ 
+     handler = data->handler;
+     curl_easy_reset(handler);
+-    curl_easy_setopt(handler, CURLOPT_ERRORBUFFER, &data->errorbuffer);
++    curl_easy_setopt(handler, CURLOPT_ERRORBUFFER, data->errorbuffer);
+     headers = curl_slist_append(headers, AXIS2_HTTP_HEADER_USER_AGENT_AXIS2C);
+     headers = curl_slist_append(headers, AXIS2_HTTP_HEADER_ACCEPT_);
+     headers = curl_slist_append(headers, AXIS2_HTTP_HEADER_EXPECT_);

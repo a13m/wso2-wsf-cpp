@@ -1,0 +1,57 @@
+diff -ur wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/axiom/test/util/Makefile.am wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/axiom/test/util/Makefile.am
+--- wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/axiom/test/util/Makefile.am	2009-10-13 15:03:29.000000000 -0400
++++ wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/axiom/test/util/Makefile.am	2012-07-17 17:10:00.902285183 -0400
+@@ -1,7 +1,9 @@
+ noinst_PROGRAMS = axiom
+ axiom_SOURCES = axiom_util_test.c
+ axiom_LDADD   =   \
+-                    $(top_builddir)/src/om/libaxis2_axiom.la 
++                    $(top_builddir)/src/om/libaxis2_axiom.la \
++                    $(top_builddir)/src/parser/libxml2/libaxis2_parser.la \
++                    $(top_builddir)/../util/src/libaxutil.la
+ 
+ INCLUDES = -I$(top_builddir)/include \
+ 			-I ../../../util/include \
+diff -ur wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/axiom/test/util/axiom_util_test.c wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/axiom/test/util/axiom_util_test.c
+--- wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/axiom/test/util/axiom_util_test.c	2009-10-13 15:03:29.000000000 -0400
++++ wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/axiom/test/util/axiom_util_test.c	2012-07-17 17:12:50.821786681 -0400
+@@ -3,6 +3,7 @@
+ #include <axiom.h>
+ #include <axis2_util.h>
+ #include <axiom_node.h>
++#include <axiom_xml_reader.h>
+ #include "../../../util/test/util/create_env.h"
+     FILE *f = NULL;
+     axiom_node_t *node = NULL;
+diff -ur wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/neethi/test/Makefile.am wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/neethi/test/Makefile.am
+--- wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/neethi/test/Makefile.am	2009-10-13 15:03:25.000000000 -0400
++++ wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/neethi/test/Makefile.am	2012-07-17 17:14:58.332913391 -0400
+@@ -10,5 +10,6 @@
+ 
+ test_LDADD = $(top_builddir)/src/libneethi.la \
+ 			../../axiom/src/om/libaxis2_axiom.la \
++                        ../../axiom/src/parser/libxml2/libaxis2_parser.la \
+ 			../../util/src/libaxutil.la \
+ 			../src/libneethi.la
+diff -ur wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/neethi/test/Makefile.in wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/neethi/test/Makefile.in
+--- wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/neethi/test/Makefile.in	2009-10-13 15:23:54.000000000 -0400
++++ wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/neethi/test/Makefile.in	2012-07-17 17:20:25.069800601 -0400
+@@ -189,6 +189,7 @@
+ 
+ test_LDADD = $(top_builddir)/src/libneethi.la \
+ 			../../axiom/src/om/libaxis2_axiom.la \
++                        ../../axiom/src/parser/libxml2/libaxis2_parser.la \
+ 			../../util/src/libaxutil.la \
+ 			../src/libneethi.la
+ 
+diff -ur wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/src/core/transport/http/server/CGI/Makefile.am wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/src/core/transport/http/server/CGI/Makefile.am
+--- wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/src/core/transport/http/server/CGI/Makefile.am	2009-10-13 15:03:22.000000000 -0400
++++ wso2-wsf-cpp-src-2.1.0/wsf_c/axis2c/src/core/transport/http/server/CGI/Makefile.am	2012-07-17 17:23:10.543262796 -0400
+@@ -19,6 +19,7 @@
+ 			     $(top_builddir)/src/core/engine/libaxis2_engine.la \
+ 			     $(top_builddir)/src/core/transport/http/sender/libaxis2_http_sender.la \
+ 			     $(top_builddir)/src/core/transport/http/receiver/libaxis2_http_receiver.la \
++			     $(top_builddir)/neethi/src/libneethi.la \
+                             -lpthread
+                     
+ INCLUDES =  -I$(top_builddir)/include \
