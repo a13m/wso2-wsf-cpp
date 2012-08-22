@@ -1,0 +1,67 @@
+--- wso2-wsf-cpp-src-2.1.0/wsf_c/rampartc/src/omxmlsec/c14n/c14n.c	2012-08-21 16:59:45.351092451 -0400
++++ wso2-wsf-cpp-src-2.1.0.new/wsf_c/rampartc/src/omxmlsec/c14n/c14n.c	2012-08-21 16:56:03.135112332 -0400
+@@ -26,6 +26,7 @@
+ #include <axutil_array_list.h>
+ #include <axiom_element.h>
+ #include <axiom_children_iterator.h>
++#include <axiom_data_source.h>
+ #include <axiom_document.h>
+ #include <axiom_comment.h>
+ #include <oxs_constants.h>
+@@ -466,6 +467,11 @@
+     const c14n_ctx_t *ctx);
+ 
+ static axis2_status_t
++c14n_apply_on_data_source (
++     const axiom_node_t *node,
++     const c14n_ctx_t *ctx);
++
++static axis2_status_t
+ c14n_apply_on_node(
+     axiom_node_t *node,
+     c14n_ctx_t *ctx);
+@@ -786,6 +792,9 @@
+                 c14n_apply_on_comment(node, ctx->outbuffer, ctx->env);
+                 break;
+             }
++        case AXIOM_DATA_SOURCE:
++            c14n_apply_on_data_source(node, ctx);
++            break;
+         case AXIOM_DOCTYPE:
+         case AXIOM_PROCESSING_INSTRUCTION:
+         default:
+@@ -904,6 +913,34 @@
+     return res;
+ }
+ 
++static axis2_status_t
++c14n_apply_on_data_source (
++     const axiom_node_t *node,
++     const c14n_ctx_t *ctx
++)
++{
++    axiom_data_source_t *src = NULL;
++    src = (axiom_data_source_t *)axiom_node_get_data_element((axiom_node_t *)node, ctx->env);
++
++    if (src == NULL)
++        return AXIS2_FAILURE;
++
++    axutil_stream_t *stream = axiom_data_source_get_stream(src, ctx->env);
++
++    if(stream == NULL)
++        return AXIS2_FAILURE;
++
++    axis2_char_t* buf =  axutil_stream_get_buffer(stream, ctx->env);
++    int buflen = axutil_stream_get_len(stream, ctx->env);
++    if(buf == NULL || buflen < 0)
++        return AXIS2_FAILURE;
++
++    buf[buflen] = '\0'; /* buflen is an index here*/
++    C14N_BUFFER_ADD_STRING_WITH_LENGTH(ctx->outbuffer, ctx->env, buf, axutil_strlen(buf));
++
++    return AXIS2_SUCCESS;
++}
++
+ static int
+ ns_uri_compare(
+     const void *ns1,

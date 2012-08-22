@@ -25,7 +25,7 @@
 Name: %{pkg_name}
 Summary: WSO2 Web Services Framework for C++
 Version: %{pkg_ver}
-Release: 12%{?dist}
+Release: 12.7%{?dist}
 Group: Development/Tools
 License: ASL 2.0
 URL: http://wso2.org/library/wsf/cpp
@@ -68,7 +68,7 @@ Patch9: axis2c-dso.patch
 Patch10: axis2c-sslctx.patch
 # Add missing data source checksum
 # https://issues.apache.org/jira/browse/RAMPARTC-154
-Patch11: rampartc-c14n.patch
+Patch11: rampartc-c14n-new.patch
 # Fix two memory leaks
 # https://issues.apache.org/jira/browse/RAMPARTC-153
 Patch12: rampartc-memleak.patch
@@ -505,8 +505,8 @@ chmod a-x wsf_c/wsclient/LICENSE
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
-%patch13 -p1
+# %patch12 -p1
+# %patch13 -p1
 
 %build
 %if %{build_sandesha2}
@@ -527,7 +527,7 @@ wsclient="--enable-wsclient"
 wsclient="--disable-wsclient"
 %endif
 
-export CFLAGS="-O2 -D_FORTIFY_SOURCE=2"
+export CFLAGS="-O2 -D_FORTIFY_SOURCE=2 $RPM_OPT_FLAGS"
 export CXXFLAGS=$CFLAGS
 ./configure --enable-multi-thread=no --with-axis2=`pwd`/wsf_c/axis2c/include --with-apache2=%{_includedir}/httpd --with-apr=%{_includedir}/apr-1 --with-sqlite=%{_includedir} --without-archive --enable-openssl --enable-libxml2 --disable-static --disable-rpath --bindir=%{_bindir} --sysconfdir=%{_sysconfdir} --libdir=%{_libdir} --includedir=%{_includedir} --datarootdir=%{_datadir}/%{pkg_name}-%{pkg_ver} --docdir=%{_datadir}/doc/%{pkg_name}-%{pkg_ver} --prefix=%{_prefix} $sandesha2 $savan $wsclient $rampart
 

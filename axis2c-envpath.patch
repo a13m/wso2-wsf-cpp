@@ -6,7 +6,7 @@ diff -ur wso2-wsf-cpp-src-2.1.0.orig/wsf_c/axis2c/src/core/transport/tcp/server/
      const axis2_char_t *log_file = AXIS2_TCP_SERVER_LOG_FILE_NAME;
      int port = AXIS2_TCP_SERVER_PORT;
 -    const axis2_char_t *repo_path = AXIS2_TCP_SERVER_REPO_PATH;
-+    axis2_char_t *repo_loc = AXIS2_GETENV("AXIS2C_HOME");
++    axis2_char_t *repo_loc = AXIS2_GETENV("WSFCPP_HOME");
 +    if (! repo_loc) {
 +        repo_loc = AXIS2_TCP_SERVER_REPO_PATH;
 +    }
