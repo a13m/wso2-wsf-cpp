@@ -25,7 +25,7 @@
 Name: %{pkg_name}
 Summary: WSO2 Web Services Framework for C++
 Version: %{pkg_ver}
-Release: 12.7%{?dist}
+Release: 12.10%{?dist}
 Group: Development/Tools
 License: ASL 2.0
 URL: http://wso2.org/library/wsf/cpp
@@ -71,7 +71,7 @@ Patch10: axis2c-sslctx.patch
 Patch11: rampartc-c14n-new.patch
 # Fix two memory leaks
 # https://issues.apache.org/jira/browse/RAMPARTC-153
-Patch12: rampartc-memleak.patch
+# Patch12: rampartc-memleak.patch
 # Fix bad timestamp checking (sent to upstream security list)
 Patch13: rampartc-timestamp.patch
 
@@ -506,7 +506,7 @@ chmod a-x wsf_c/wsclient/LICENSE
 %patch10 -p1
 %patch11 -p1
 # %patch12 -p1
-# %patch13 -p1
+%patch13 -p1
 
 %build
 %if %{build_sandesha2}
